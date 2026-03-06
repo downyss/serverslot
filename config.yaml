@@ -1,5 +1,6 @@
 database:
   driver-name: "mysql"
-  club-source-name: "${MYSQLUSER}:${MYSQLPASSWORD}@tcp(${MYSQLHOST}:${MYSQLPORT})/${MYSQLDATABASE}?charset=utf8mb4&parseTime=True&loc=Local"
-  spin-source-name: "${MYSQLUSER}:${MYSQLPASSWORD}@tcp(${MYSQLHOST}:${MYSQLPORT})/${MYSQLDATABASE}?charset=utf8mb4&parseTime=True&loc=Local"
   use-spin-log: true
+  club-source-name: "root:LKjetaPAAcUefrxFKtZodGeVnYiIatGe@tcp(
+mysql.railway.internal:3306)/railway?charset=utf8mb4&parseTime=True&loc=Local"
+  spin-source-name: "root:LKjetaPAAcUefrxFKtZodGeVnYiIatGe@tcp(mysql.railway.internal:3306)/railway?charset=utf8mb4&parseTime=True&loc=Local"
