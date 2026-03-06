@@ -1,4 +1,4 @@
-package cmd
+ppackage cmd
 
 import (
 	"context"
@@ -89,7 +89,17 @@ var webCmd = &cobra.Command{
 				go func() {
 					defer cancel()
 					// service connections
-					if err = srv.ListenAndServe(); err != nil {
+// 1. Tambahkan "os" di bagian import (paling atas file)
+
+// 2. Cari di mana variabel 'addr' dibuat, lalu ubah menjadi:
+port := os.Getenv("PORT")
+if port == "" {
+    port = "8080" // Default jika jalan di laptop sendiri
+}
+addr := ":" + port 
+
+// ... sisanya biarkan tetap seperti kode asli Anda ...
+// srv.ListenAndServe() akan otomatis menggunakan addr yang baru
 						if err != http.ErrServerClosed {
 							err = fmt.Errorf("failed to serve on %s: %w", addr, err)
 							return
