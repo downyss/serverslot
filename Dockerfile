@@ -1,43 +1,21 @@
-# Typical usage:
-#   docker build --progress=plain --pull --rm -f "Dockerfile" -t schwarzlichtbezirk/slotopol:latest "."
-#   docker run -d -p 8080:8080 schwarzlichtbezirk/slotopol
-
-##
-## Build stage
-##
-
-# Use image with golang last version as builder.
+# Tahap Build
 FROM golang:1.25-bookworm AS build
-
-# Make project root folder as current dir.
 WORKDIR /go/src/github.com/slotopol/server
-# Copy only go.mod and go.sum to prevent downloads all dependencies again on any code changes.
 COPY go.mod go.sum ./
-# Download all dependencies pointed at go.mod file.
 RUN go mod download
-# Copy all files and subfolders in current state as is.
 COPY . .
+# Build dengan tags dan output langsung ke folder /go/bin/app
+RUN go build -tags "full keno agt aristocrat betsoft ct igt megajack netent novomatic" -o /go/bin/app main.go
 
-# Set executable rights to all shell-scripts.
-RUN chmod +x ./task/*.sh
-# Compile project for Linux amd64.
-RUN go build -tags "full keno agt aristocrat betsoft ct igt megajack netent novomatic" -o /go/bin/app .
+# Tahap Deploy
+FROM debian:bookworm-slim
+# Install library SSL agar tidak error saat konek database cloud
+RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
+COPY --from=build /go/bin/app /go/bin/app
+# Copy folder config dan appdata jika diperlukan aplikasi
+COPY --from=build /go/src/github.com/slotopol/server/config /config
+COPY --from=build /go/src/github.com/slotopol/server/appdata /appdata
 
-
-##
-## Deploy stage
-##
-
-# Thin deploy image.
-FROM scratch
-
-# Copy compiled executable and configuration files to new image destination.
-COPY --from=build /go/bin /go/bin
-
-# Open REST listen port.
 EXPOSE 8080
-
-# Run application with full path representation.
-# Without shell to get signal for graceful shutdown.
 ENTRYPOINT ["/go/bin/app"]
 CMD ["-v", "web"]
