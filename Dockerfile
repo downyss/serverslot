@@ -21,7 +21,8 @@ COPY . .
 # Set executable rights to all shell-scripts.
 RUN chmod +x ./task/*.sh
 # Compile project for Linux amd64.
-RUN ./task/build-docker.sh
+RUN go build -tags "full keno agt aristocrat betsoft ct igt megajack netent novomatic" -o /go/bin/app .
+
 
 ##
 ## Deploy stage
